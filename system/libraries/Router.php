@@ -1,4 +1,7 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
  * CodeIgniter
  *
@@ -29,14 +32,14 @@
 class CI_Router {
 
     var $config;
-    var $routes 		= array();
-    var $error_routes	= array();
-    var $class			= '';
-    var $method			= 'index';
-    var $directory		= '';
-    var $uri_protocol 	= 'auto';
+    var $routes                 = array();
+    var $error_routes           = array();
+    var $class                  = '';
+    var $method                 = 'index';
+    var $directory              = '';
+    var $uri_protocol           = 'auto';
     var $default_controller;
-    var $scaffolding_request = FALSE; // Must be set to FALSE
+    var $scaffolding_request    = FALSE; // Must be set to FALSE
 
     /**
      * Constructor
@@ -74,8 +77,11 @@ class CI_Router {
         // Fetch the complete URI string
         $this->uri->_fetch_uri_string();
 
+        print_r($_GET);
+        echo "URI String: " . $this->uri->uri_string . "<br />";
+
         // Is there a URI string? If not, the default controller specified in the "routes" file will be shown.
-        if ($this->uri->uri_string == '') {
+        if ($this->uri->uri_string == '' || strpos($this->uri->uri_string, '/') === FALSE) {
             if ($this->default_controller === FALSE) {
                 show_error("Unable to determine what should be displayed. A default route has not been specified in the routing file.");
             }
