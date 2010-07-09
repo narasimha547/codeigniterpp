@@ -79,7 +79,6 @@ $EXT->_call_hook('pre_system');
  *  Instantiate the base classes
  * ------------------------------------------------------
  */
-
 $CFG =& load_class('Config');
 $URI =& load_class('URI');
 $RTR =& load_class('Router');
