@@ -1,6 +1,6 @@
 <?php
 
-if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Determines if the current version of PHP is greater then the supplied value
@@ -16,7 +16,7 @@ function is_php($version = '5.0.0') {
     static $_is_php;
     $version = (string)$version;
 
-    if ( ! isset($_is_php[$version])) {
+    if (!isset($_is_php[$version])) {
         $_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? FALSE : TRUE;
     }
 
@@ -146,14 +146,14 @@ function &instantiate_class(&$class_object) {
 function &get_config() {
     static $main_conf;
 
-    if ( ! isset($main_conf)) {
+    if (!isset($main_conf)) {
         if ( ! file_exists(APPPATH.'config/config'.EXT)) {
             exit('The configuration file config'.EXT.' does not exist.');
         }
 
         require(APPPATH.'config/config'.EXT);
 
-        if ( ! isset($config) OR ! is_array($config)) {
+        if (!isset($config) OR ! is_array($config)) {
             exit('Your config file does not appear to be formatted correctly.');
         }
 
@@ -171,7 +171,7 @@ function &get_config() {
 function config_item($item) {
     static $config_item = array();
 
-    if ( ! isset($config_item[$item])) {
+    if (!isset($config_item[$item])) {
         $config =& get_config();
 
         if ( ! isset($config[$item])) {
