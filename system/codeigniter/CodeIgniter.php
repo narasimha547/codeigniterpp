@@ -142,6 +142,9 @@ $BM->mark('loading_time_base_classes_end');
 $class  = $RTR->fetch_class();
 $method = $RTR->fetch_method();
 
+echo "Class: "  . $class . "<br />";
+echo "Method: "  . $method . "<br />";
+
 if (!class_exists($class)
         OR $method == 'controller'
         OR strncmp($method, '_', 1) == 0
