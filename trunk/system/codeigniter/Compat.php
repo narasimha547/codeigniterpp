@@ -1,4 +1,7 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
  * CodeIgniter
  *
@@ -35,10 +38,9 @@
  * so we need to explicitly define it otherwise the Exception class 
  * will generate errors when running under PHP 4
  *
- */
-if ( ! defined('E_STRICT'))
-{
-	define('E_STRICT', 2048);
+*/
+if (!defined('E_STRICT')) {
+    define('E_STRICT', 2048);
 }
 
 /**
@@ -51,17 +53,14 @@ if ( ! defined('E_STRICT'))
  * @param	string
  * @return	bool
  */
-if ( ! function_exists('ctype_digit'))
-{
-	function ctype_digit($str)
-	{
-		if ( ! is_string($str) OR $str == '')
-		{
-			return FALSE;
-		}
-		
-		return ! preg_match('/[^0-9]/', $str);
-	}	
+if (!function_exists('ctype_digit')) {
+    function ctype_digit($str) {
+        if (!is_string($str) OR $str == '') {
+            return FALSE;
+        }
+
+        return ! preg_match('/[^0-9]/', $str);
+    }
 }
 
 // --------------------------------------------------------------------
@@ -76,17 +75,14 @@ if ( ! function_exists('ctype_digit'))
  * @param	string
  * @return	bool
  */
-if ( ! function_exists('ctype_alnum'))
-{
-	function ctype_alnum($str)
-	{
-		if ( ! is_string($str) OR $str == '')
-		{
-			return FALSE;
-		}
-		
-		return ! preg_match('/[^0-9a-z]/i', $str);
-	}	
+if (!function_exists('ctype_alnum')) {
+    function ctype_alnum($str) {
+        if (!is_string($str) OR $str == '') {
+            return FALSE;
+        }
+
+        return !preg_match('/[^0-9a-z]/i', $str);
+    }
 }
 
 /* End of file Compat.php */
