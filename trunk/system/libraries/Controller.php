@@ -22,9 +22,16 @@ class Controller extends CI_Base {
     /**
      * @var CI_Loader
      *
-     * Added to activate autocomplete in NetBeans
+     * Added to enable autocomplete in NetBeans
      */
     protected $load = null;
+
+    /**
+     * @var CI_URI
+     *
+     * Added to enable autocomplete in NetBeans
+     */
+    protected $uri = null;
 
     /**
      * Constructor
