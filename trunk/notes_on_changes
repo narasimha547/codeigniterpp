@@ -1,0 +1,16 @@
+Removed following code from CI_Uri::_fetch_uri_string()
+
+if (is_array($_GET) && count($_GET) == 1 && trim(key($_GET), '/') != '') {
+    $this->uri_string = key($_GET);
+    echo $this->uri_string;
+    return;
+}
+
+It is no longer possible to use URIs such as:
+
+http://www.monkey.com/index.php?aboutus/contact
+http://www.monkey.com/?aboutus/contact
+
+to access the controller aboutus and method contact but it is now possible to
+use URIs and the $_GET array. Following query will work:
+
