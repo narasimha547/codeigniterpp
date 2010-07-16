@@ -77,10 +77,9 @@ class CI_Router {
         // Fetch the complete URI string
         $this->uri->_fetch_uri_string();
 
-        print_r($_GET);
-        echo "URI String: " . $this->uri->uri_string . "<br />";
-
         // Is there a URI string? If not, the default controller specified in the "routes" file will be shown.
+        // strpos($this->uri->uri_string, '/') was added in order to be able to
+        // use URIs such as www.monkey.com/?name=stag
         if ($this->uri->uri_string == '' || strpos($this->uri->uri_string, '/') === FALSE) {
             if ($this->default_controller === FALSE) {
                 show_error("Unable to determine what should be displayed. A default route has not been specified in the routing file.");
@@ -88,7 +87,6 @@ class CI_Router {
 
             if (strpos($this->default_controller, '/') !== FALSE) {
                 $x = explode('/', $this->default_controller);
-
                 $this->set_class(end($x));
                 $this->set_method('index');
                 $this->_set_request($x);
