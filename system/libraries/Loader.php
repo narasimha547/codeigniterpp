@@ -67,30 +67,22 @@ class CI_Loader {
      *
      * @access	public
      * @param	string	the name of the class
-     * @param	mixed	the optional parameters
-     * @param	string	an optional object name
      * @return	void
      */
-    function library($library = '', $params = NULL, $object_name = NULL) {
-        
+    function library($library = '') {
+
         if ($library == '') {
             return FALSE;
         }
 
-        if ( ! is_null($params) AND ! is_array($params)) {
-            $params = NULL;
-        }
-
         if (is_array($library)) {
             foreach ($library as $class) {
-                $this->_ci_load_class($class, $params, $object_name);
+                $this->_ci_load_class($class);
             }
         }
         else {
-            $this->_ci_load_class($library, $params, $object_name);
+            $this->_ci_load_class($library);
         }
-
-        $this->_ci_assign_to_models();
     }
 
     // --------------------------------------------------------------------
@@ -651,7 +643,7 @@ class CI_Loader {
      * @param	string	an optional object name
      * @return 	void
      */
-    function _ci_load_class($class, $params = NULL, $object_name = NULL) {
+    function _ci_load_class($class) {
         // Get the class name, and while we're at it trim any slashes.
         // The directory path can be included as part of the class name,
         // but we don't want a leading slash
@@ -660,6 +652,7 @@ class CI_Loader {
         // Was the path included with the class name?
         // We look for a slash to determine this
         $subdir = '';
+        
         if (strpos($class, '/') !== FALSE) {
             // explode the path so we can separate the filename from the path
             $x = explode('/', $class);
@@ -676,64 +669,20 @@ class CI_Loader {
 
         // We'll test for both lowercase and capitalized versions of the file name
         foreach (array(ucfirst($class), strtolower($class)) as $class) {
-            $subclass = APPPATH.'libraries/'.$subdir.config_item('subclass_prefix').$class.EXT;
-
-            // Is this a class extension request?
-            if (file_exists($subclass)) {
-                $baseclass = BASEPATH.'libraries/'.ucfirst($class).EXT;
-
-                if ( ! file_exists($baseclass)) {
-                    log_message('error', "Unable to load the requested class: ".$class);
-                    show_error("Unable to load the requested class: ".$class);
-                }
-
-                // Safety:  Was the class already loaded by a previous call?
-                if (in_array($subclass, $this->_ci_loaded_files)) {
-                    // Before we deem this to be a duplicate request, let's see
-                    // if a custom object name is being supplied.  If so, we'll
-                    // return a new instance of the object
-                    if ( ! is_null($object_name)) {
-                        $CI =& get_instance();
-                        if ( ! isset($CI->$object_name)) {
-                            return $this->_ci_init_class($class, config_item('subclass_prefix'), $params, $object_name);
-                        }
-                    }
-
-                    $is_duplicate = TRUE;
-                    log_message('debug', $class." class already loaded. Second attempt ignored.");
-                    return;
-                }
-
-                include_once($baseclass);
-                include_once($subclass);
-                $this->_ci_loaded_files[] = $subclass;
-
-                return $this->_ci_init_class($class, config_item('subclass_prefix'), $params, $object_name);
-            }
-
             // Lets search for the requested library file and load it.
             $is_duplicate = FALSE;
+            
             for ($i = 1; $i < 3; $i++) {
                 $path = ($i % 2) ? APPPATH : BASEPATH;
                 $filepath = $path.'libraries/'.$subdir.$class.EXT;
 
-                // Does the file exist?  No?  Bummer...
-                if ( ! file_exists($filepath)) {
+                // Does the file exist? No? Bummer...
+                if (!file_exists($filepath)) {
                     continue;
                 }
 
-                // Safety:  Was the class already loaded by a previous call?
+                // Safety: Was the class already loaded by a previous call?
                 if (in_array($filepath, $this->_ci_loaded_files)) {
-                    // Before we deem this to be a duplicate request, let's see
-                    // if a custom object name is being supplied.  If so, we'll
-                    // return a new instance of the object
-                    if ( ! is_null($object_name)) {
-                        $CI =& get_instance();
-                        if ( ! isset($CI->$object_name)) {
-                            return $this->_ci_init_class($class, '', $params, $object_name);
-                        }
-                    }
-
                     $is_duplicate = TRUE;
                     log_message('debug', $class." class already loaded. Second attempt ignored.");
                     return;
@@ -741,14 +690,8 @@ class CI_Loader {
 
                 include_once($filepath);
                 $this->_ci_loaded_files[] = $filepath;
-                return $this->_ci_init_class($class, '', $params, $object_name);
+                return;
             }
-        } // END FOREACH
-
-        // One last attempt.  Maybe the library is in a subdirectory, but it wasn't specified?
-        if ($subdir == '') {
-            $path = strtolower($class).'/'.$class;
-            return $this->_ci_load_class($path, $params);
         }
 
         // If we got this far we were unable to find the requested class.
@@ -770,63 +713,63 @@ class CI_Loader {
      * @param	string	an optional object name
      * @return	null
      */
-    function _ci_init_class($class, $prefix = '', $config = FALSE, $object_name = NULL) {
-        // Is there an associated config file for this class?
-        if ($config === NULL) {
-            // We test for both uppercase and lowercase, for servers that
-            // are case-sensitive with regard to file names
-            if (file_exists(APPPATH.'config/'.strtolower($class).EXT)) {
-                include_once(APPPATH.'config/'.strtolower($class).EXT);
-            }
-            elseif (file_exists(APPPATH.'config/'.ucfirst(strtolower($class)).EXT)) {
-                include_once(APPPATH.'config/'.ucfirst(strtolower($class)).EXT);
-            }
-        }
-
-        if ($prefix == '') {
-            if (class_exists('CI_'.$class)) {
-                $name = 'CI_'.$class;
-            }
-            elseif (class_exists(config_item('subclass_prefix').$class)) {
-                $name = config_item('subclass_prefix').$class;
-            }
-            else {
-                $name = $class;
-            }
-        }
-        else {
-            $name = $prefix.$class;
-        }
-
-        // Is the class name valid?
-        if ( ! class_exists($name)) {
-            log_message('error', "Non-existent class: ".$name);
-            show_error("Non-existent class: ".$class);
-        }
-
-        // Set the variable name we will assign the class to
-        // Was a custom class name supplied?  If so we'll use it
-        $class = strtolower($class);
-
-        if (is_null($object_name)) {
-            $classvar = ( ! isset($this->_ci_varmap[$class])) ? $class : $this->_ci_varmap[$class];
-        }
-        else {
-            $classvar = $object_name;
-        }
-
-        // Save the class name and object name
-        $this->_ci_classes[$class] = $classvar;
-
-        // Instantiate the class
-        $CI =& get_instance();
-        if ($config !== NULL) {
-            $CI->$classvar = new $name($config);
-        }
-        else {
-            $CI->$classvar = new $name;
-        }
-    }
+//    function _ci_init_class($class, $prefix = '', $config = FALSE, $object_name = NULL) {
+//        // Is there an associated config file for this class?
+//        if ($config === NULL) {
+//            // We test for both uppercase and lowercase, for servers that
+//            // are case-sensitive with regard to file names
+//            if (file_exists(APPPATH.'config/'.strtolower($class).EXT)) {
+//                include_once(APPPATH.'config/'.strtolower($class).EXT);
+//            }
+//            elseif (file_exists(APPPATH.'config/'.ucfirst(strtolower($class)).EXT)) {
+//                include_once(APPPATH.'config/'.ucfirst(strtolower($class)).EXT);
+//            }
+//        }
+//
+//        if ($prefix == '') {
+//            if (class_exists('CI_'.$class)) {
+//                $name = 'CI_'.$class;
+//            }
+//            elseif (class_exists(config_item('subclass_prefix').$class)) {
+//                $name = config_item('subclass_prefix').$class;
+//            }
+//            else {
+//                $name = $class;
+//            }
+//        }
+//        else {
+//            $name = $prefix.$class;
+//        }
+//
+//        // Is the class name valid?
+//        if ( ! class_exists($name)) {
+//            log_message('error', "Non-existent class: ".$name);
+//            show_error("Non-existent class: ".$class);
+//        }
+//
+//        // Set the variable name we will assign the class to
+//        // Was a custom class name supplied?  If so we'll use it
+//        $class = strtolower($class);
+//
+//        if (is_null($object_name)) {
+//            $classvar = ( ! isset($this->_ci_varmap[$class])) ? $class : $this->_ci_varmap[$class];
+//        }
+//        else {
+//            $classvar = $object_name;
+//        }
+//
+//        // Save the class name and object name
+//        $this->_ci_classes[$class] = $classvar;
+//
+//        // Instantiate the class
+//        $CI =& get_instance();
+//        if ($config !== NULL) {
+//            $CI->$classvar = new $name($config);
+//        }
+//        else {
+//            $CI->$classvar = new $name;
+//        }
+//    }
 
     // --------------------------------------------------------------------
 
