@@ -7,11 +7,7 @@ class Main extends Controller {
     }
 
     function index() {
-        echo "MAIN";
-    }
-
-    function test() {
-        echo "MAIN/TEST";
+        echo "<br>INDEX of MAIN</br>";
     }
 }
 
