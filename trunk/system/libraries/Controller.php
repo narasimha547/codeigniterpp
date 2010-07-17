@@ -1,6 +1,6 @@
 <?php
 
-if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * CodeIgniter Application Controller Class
@@ -11,8 +11,6 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
  * @package     CodeIgniter
  * @subpackage	Libraries
  * @category	Libraries
- * @author      ExpressionEngine Dev Team
- * @link        http://codeigniter.com/user_guide/general/controllers.html
  */
 class Controller extends CI_Base {
 
@@ -21,15 +19,11 @@ class Controller extends CI_Base {
 
     /**
      * @var CI_Loader
-     *
-     * Added to enable autocomplete in NetBeans
      */
     protected $load = null;
 
     /**
      * @var CI_URI
-     *
-     * Added to enable autocomplete in NetBeans
      */
     protected $uri = null;
 
@@ -43,8 +37,6 @@ class Controller extends CI_Base {
         $this->_ci_initialize();
         log_message('debug', "Controller Class Initialized");
     }
-
-    // --------------------------------------------------------------------
 
     /**
      * Initialize
