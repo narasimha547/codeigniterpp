@@ -174,7 +174,7 @@ function config_item($item) {
     if (!isset($config_item[$item])) {
         $config =& get_config();
 
-        if ( ! isset($config[$item])) {
+        if (!isset($config[$item])) {
             return FALSE;
         }
         $config_item[$item] = $config[$item];
