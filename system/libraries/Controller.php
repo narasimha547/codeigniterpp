@@ -8,14 +8,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  * This class object is the super class that every library in
  * CodeIgniter will be assigned to.
  *
- * @package     CodeIgniter
+ * @package     CodeLite
  * @subpackage	Libraries
  * @category	Libraries
  */
 class Controller extends CI_Base {
-
-    var $_ci_scaffolding	= FALSE;
-    var $_ci_scaff_table	= FALSE;
 
     /**
      * @var CI_Loader
@@ -52,45 +49,20 @@ class Controller extends CI_Base {
         // front controller to local class variables so that CI can be
         // run as one big super object.
         $classes = array(
-                'config'        => 'Config',
-                'input'		=> 'Input',
-                'benchmark'	=> 'Benchmark',
-                'uri'		=> 'URI',
-                'output'	=> 'Output',
-                'lang'		=> 'Language',
-                'router'	=> 'Router'
+                'config' => 'Config',
+                'input' => 'Input',
+                'uri' => 'URI',
+                'output' => 'Output',
+                'router' => 'Router'
         );
 
         foreach ($classes as $var => $class) {
             $this->$var =& load_class($class);
         }
 
-        // Removed PHP4 support
         $this->load =& load_class('Loader');
         $this->load->_ci_autoloader();
     }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Run Scaffolding
-     *
-     * @access	private
-     * @return	void
-     */
-    function _ci_scaffolding() {
-        if ($this->_ci_scaffolding === FALSE OR $this->_ci_scaff_table === FALSE) {
-            show_404('Scaffolding unavailable');
-        }
-
-        $method = ( ! in_array($this->uri->segment(3), array('add', 'insert', 'edit', 'update', 'view', 'delete', 'do_delete'), TRUE)) ? 'view' : $this->uri->segment(3);
-
-        require_once(BASEPATH.'scaffolding/Scaffolding'.EXT);
-        $scaff = new Scaffolding($this->_ci_scaff_table);
-        $scaff->$method();
-    }
-
-
 }
 // END _Controller class
 

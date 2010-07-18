@@ -7,39 +7,30 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  *
  * An open source application development framework for PHP 4.3.2 or newer
  *
- * @package     CodeIgniter
- * @author      ExpressionEngine Dev Team
- * @copyright   Copyright (c) 2008 - 2009, EllisLab, Inc.
- * @license     http://codeigniter.com/user_guide/license.html
- * @link        http://codeigniter.com
- * @since       Version 1.0
+ * @package     CodeLite
+ * @author      David Stefan
  * @filesource
  */
-
-// ------------------------------------------------------------------------
 
 /**
  * Router Class
  *
  * Parses URIs and determines routing
  *
- * @package     CodeIgniter
+ * @package     CodeLite
  * @subpackage  Libraries
- * @author      ExpressionEngine Dev Team
+ * @author      David Stefan
  * @category    Libraries
- * @link        http://codeigniter.com/user_guide/general/routing.html
  */
 class CI_Router {
 
     var $config;
-    var $routes                 = array();
-    var $error_routes           = array();
-    var $class                  = '';
-    var $method                 = 'index';
-    var $directory              = '';
-    var $uri_protocol           = 'auto';
+    var $routes = array();
+    var $error_routes = array();
+    var $class = '';
+    var $method = 'index';
+    var $directory = '';
     var $default_controller;
-    var $scaffolding_request    = FALSE; // Must be set to FALSE
 
     /**
      * Constructor
@@ -67,24 +58,22 @@ class CI_Router {
     function _set_routing() {
         // Load the routes.php file.
         @include(APPPATH.'config/routes'.EXT);
-        $this->routes = ( ! isset($route) OR ! is_array($route)) ? array() : $route;
+        $this->routes = (!isset($route) OR !is_array($route)) ? array() : $route;
         unset($route);
 
         // Set the default controller so we can display it in the event
         // the URI doesn't correlated to a valid controller.
-        $this->default_controller = ( ! isset($this->routes['default_controller']) OR $this->routes['default_controller'] == '') ? FALSE : strtolower($this->routes['default_controller']);
+        $this->default_controller = (!isset($this->routes['default_controller']) OR $this->routes['default_controller'] == '') ? FALSE : strtolower($this->routes['default_controller']);
 
         // Fetch the complete URI string
         $this->uri->_fetch_uri_string();
 
         // Is there a URI string? If not, the default controller specified in the "routes" file will be shown.
-        // strpos($this->uri->uri_string, '/') was added in order to be able to
-        // use URIs such as www.monkey.com/?name=stag
         if ($this->uri->uri_string == '' || strpos($this->uri->uri_string, '/') === FALSE) {
             if ($this->default_controller === FALSE) {
                 show_error("Unable to determine what should be displayed. A default route has not been specified in the routing file.");
             }
-
+            
             if (strpos($this->default_controller, '/') !== FALSE) {
                 $x = explode('/', $this->default_controller);
                 $this->set_class(end($x));
@@ -96,13 +85,14 @@ class CI_Router {
                 $this->set_method('index');
                 $this->_set_request(array($this->default_controller, 'index'));
             }
-
+            
             // re-index the routed segments array so it starts with 1 rather than 0
             $this->uri->_reindex_segments();
-
+            
             log_message('debug', "No URI present. Default controller set.");
             return;
         }
+        
         unset($this->routes['default_controller']);
 
         // Do we need to remove the URL suffix?
