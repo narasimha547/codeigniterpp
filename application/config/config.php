@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  * Base site URL
  * 
  */
-$config['base_url']	= "http://localhost/";
+$config['base_url'] = "http://localhost/";
 
 /***************************************************************
  * Index File

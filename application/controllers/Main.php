@@ -7,7 +7,11 @@ class Main extends Controller {
     }
 
     function index() {
-        echo "<br>INDEX of MAIN</br>";
+        $this->load->view('main');
+    }
+
+    function test() {
+        print_r($_GET);
     }
 }
 
