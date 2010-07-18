@@ -4,34 +4,27 @@
  *
  * An open source application development framework for PHP 4.3.2 or newer
  *
- * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
- * @license		http://codeigniter.com/user_guide/license.html
- * @link		http://codeigniter.com
- * @since		Version 1.0
+ * @package     CodeLite
+ * @author      David Stefan
  * @filesource
  */
-
-// ------------------------------------------------------------------------
 
 /**
  * URI Class
  *
  * Parses URIs and determines routing
  *
- * @package		CodeIgniter
+ * @package     CodeLite
  * @subpackage	Libraries
  * @category	URI
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/uri.html
+ * @author      David Stefan
  */
 class CI_URI {
 
     var	$keyval	= array();
     var $uri_string;
-    var $segments		= array();
-    var $rsegments		= array();
+    var $segments = array();
+    var $rsegments = array();
 
     /**
      * Constructor
@@ -57,52 +50,37 @@ class CI_URI {
      * @return	string
      */
     function _fetch_uri_string() {
-
-        if (strtoupper($this->config->item('uri_protocol')) == 'AUTO') {
-            // Is there a PATH_INFO variable?
-            // Note: some servers seem to have trouble with getenv() so we'll test it two ways
-            $path = (isset($_SERVER['PATH_INFO'])) ? $_SERVER['PATH_INFO'] : @getenv('PATH_INFO');
-            if (trim($path, '/') != '' && $path != "/".SELF) {
-                $this->uri_string = $path;
-                return;
-            }
-
-            // No PATH_INFO?... What about QUERY_STRING?
-            $path =  (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : @getenv('QUERY_STRING');
-            if (trim($path, '/') != '') {
-                $this->uri_string = $path;
-                return;
-            }
-
-            // No QUERY_STRING?... Maybe the ORIG_PATH_INFO variable exists?
-            $path = str_replace($_SERVER['SCRIPT_NAME'], '', (isset($_SERVER['ORIG_PATH_INFO'])) ? $_SERVER['ORIG_PATH_INFO'] : @getenv('ORIG_PATH_INFO'));
-            if (trim($path, '/') != '' && $path != "/".SELF) {
-                // remove path and script information so we have good URI data
-                $this->uri_string = $path;
-                return;
-            }
-
-            // We've exhausted all our options...
-            $this->uri_string = '';
+        // Is there a PATH_INFO variable?
+        // Note: some servers seem to have trouble with getenv() so we'll test it two ways
+        $path = (isset($_SERVER['PATH_INFO'])) ? $_SERVER['PATH_INFO'] : @getenv('PATH_INFO');
+        if (trim($path, '/') != '' && $path != "/".SELF) {
+            $this->uri_string = $path;
+            return;
         }
-        else {
-            $uri = strtoupper($this->config->item('uri_protocol'));
 
-            if ($uri == 'REQUEST_URI') {
-                $this->uri_string = $this->_parse_request_uri();
-                return;
-            }
-
-            $this->uri_string = (isset($_SERVER[$uri])) ? $_SERVER[$uri] : @getenv($uri);
+        // No PATH_INFO?... What about QUERY_STRING?
+        $path = (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : @getenv('QUERY_STRING');
+        if (trim($path, '/') != '') {
+            $this->uri_string = $path;
+            return;
         }
+
+        // No QUERY_STRING?... Maybe the ORIG_PATH_INFO variable exists?
+        $path = str_replace($_SERVER['SCRIPT_NAME'], '', (isset($_SERVER['ORIG_PATH_INFO'])) ? $_SERVER['ORIG_PATH_INFO'] : @getenv('ORIG_PATH_INFO'));
+        if (trim($path, '/') != '' && $path != "/".SELF) {
+            // remove path and script information so we have good URI data
+            $this->uri_string = $path;
+            return;
+        }
+
+        // We've exhausted all our options...
+        $this->uri_string = '';
 
         // If the URI contains only a slash we'll kill it
         if ($this->uri_string == '/') {
             $this->uri_string = '';
         }
     }
-
-    // --------------------------------------------------------------------
 
     /**
      * Parse the REQUEST_URI

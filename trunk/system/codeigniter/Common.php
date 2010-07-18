@@ -147,7 +147,7 @@ function &get_config() {
     static $main_conf;
 
     if (!isset($main_conf)) {
-        if ( ! file_exists(APPPATH.'config/config'.EXT)) {
+        if (!file_exists(APPPATH.'config/config'.EXT)) {
             exit('The configuration file config'.EXT.' does not exist.');
         }
 

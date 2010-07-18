@@ -38,7 +38,6 @@ $URI    =& load_class('URI');
 $RTR    =& load_class('Router');
 $OUT    =& load_class('Output');
 $IN     =& load_class('Input');
-$LANG   =& load_class('Language');
 
 /***************************************************************
  *  Load the app controller and local controller
@@ -60,18 +59,13 @@ if (!file_exists(APPPATH.'controllers/'.$RTR->fetch_directory().$RTR->fetch_clas
 
 include(APPPATH.'controllers/'.$RTR->fetch_directory().$RTR->fetch_class().EXT);
 
-// Set a mark point for benchmarking
-$BM->mark('loading_time_base_classes_end');
-
-
-/**
- * ------------------------------------------------------
+/***************************************************************
  *  Security check
- * ------------------------------------------------------
  *
  *  None of the functions in the app controller or the
  *  loader class can be called via the URI, nor can
  *  controller functions that begin with an underscore
+ * 
  */
 $class  = $RTR->fetch_class();
 $method = $RTR->fetch_method();
