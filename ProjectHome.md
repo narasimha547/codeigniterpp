@@ -1,0 +1,1 @@
+CodeIgniter with in-line documentation to support autocomplete in NetBeans. Another aim of the project is to also lift some weight off the code by customizing the framework to support PHP5 only.
